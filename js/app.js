@@ -19,13 +19,27 @@ window.addEventListener('load', () => {
 				})
 				.then(data => {
 					console.log(data);
-					const { temperature, summary } = data.currently;
-
-					//  Setting DOM elements
-					temperatureDegree.textContent = temperature;
+					updateWeather(data);
 				});
 		});
 	} else {
 		//  display some error
+	}
+
+	function updateWeather(data) {
+		const { temperature, summary, icon } = data.currently;
+
+		//  Setting DOM elements
+		temperatureDegree.textContent = Math.round((temperature - 32) * (5 / 9)); //  We want celcious tnx
+		temperatureDescription.textContent = summary;
+		locationTimezone.textContent = data.timezone;
+		setIcons(icon, document.querySelector('.icon'));
+	}
+
+	function setIcons(icon, iconId) {
+		const skycons = new Skycons({ color: 'white' });
+		const currentIcon = icon.replace(/-/g, '_').toUpperCase();
+		skycons.play();
+		return skycons.set(iconId, Skycons[currentIcon]);
 	}
 });
